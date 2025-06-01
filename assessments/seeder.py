@@ -1,7 +1,8 @@
 # myapp/seeder.py
 
 import random
-from assessments.models import AssessmentScenario, Question
+from assessments.models import AssessmentScenario, Question, RecordingStep
+from datetime import timedelta
 
 def run():
     scenarios = [
@@ -164,3 +165,111 @@ def run():
         )
 
     print(f"✅ Seeded {len(questions)} questions successfully.")
+
+    # Retrieve all AssessmentScenario objects for linking
+    scenarios = AssessmentScenario.objects.all()
+
+    questions = [
+        {
+            "question_text": "Does the child make regular eye contact?",
+            "question_order": "1"
+        },
+        {
+            "question_text": "Does the child respond when called by name?",
+            "question_order": "2"
+        },
+        {
+            "question_text": "Does the child follow your gestures, like pointing?",
+            "question_order": "3"
+        },
+        {
+            "question_text": "Does the child imitate simple actions like clapping?",
+            "question_order": "4"
+        },
+        {
+            "question_text": "Does the child engage in pretend play with toys?",
+            "question_order": "5"
+        },
+        {
+            "question_text": "Does the child show unusual responses to sensory stimuli?",
+            "question_order": "6"
+        },
+        {
+            "question_text": "Does the child show repetitive behaviors, like hand flapping?",
+            "question_order": "7"
+        },
+        {
+            "question_text": "Can the child hold a basic conversation or exchange words?",
+            "question_order": "8"
+        },
+        {
+            "question_text": "Does the child respond with empathy when someone is hurt?",
+            "question_order": "9"
+        },
+        {
+            "question_text": "Does the child show distress when there is a change in routine?",
+            "question_order": "10"
+        },
+    ]
+
+    # Optional: Clear existing questions (CAUTION: deletes all!)
+    Question.objects.all().delete()
+
+    # Link each question to a random AssessmentScenario (for demonstration)
+    for q in questions:
+        scenario = random.choice(scenarios)  # Link to a random AssessmentScenario
+        
+        Question.objects.create(
+            question_text=q["question_text"],
+            question_order=q["question_order"],
+            as_id=scenario
+        )
+
+    print(f"✅ Seeded {len(questions)} questions successfully.")
+
+    # Seeder for RecordingStep
+    RecordingStep.objects.all().delete()
+
+    # Example steps for each scenario (customize as needed)
+    step_templates = [
+        {
+            "number": 1,
+            "name": "Preparation",
+            "description": "Prepare the environment and ensure the child is comfortable.",
+            "img_path": "images/steps/preparation.jpg",
+            "expected_duration": "00:01:00",
+        },
+        {
+            "number": 2,
+            "name": "Instruction",
+            "description": "Explain the task to the child in simple terms.",
+            "img_path": "images/steps/instruction.jpg",
+            "expected_duration": "00:00:30",
+        },
+        {
+            "number": 3,
+            "name": "Observation",
+            "description": "Observe and record the child's behavior during the task.",
+            "img_path": "images/steps/observation.jpg",
+            "expected_duration": "00:02:00",
+        },
+    ]
+
+
+    total_steps_created = 0
+    for scenario in scenarios:
+        for step in step_templates:
+            RecordingStep.objects.create(
+                as_id=scenario,
+                number=step["number"],
+                name=step["name"],
+                description=step["description"],
+                img_path=step["img_path"],
+                expected_duration=timedelta(
+                    minutes=int(step["expected_duration"].split(":")[1]),
+                    seconds=int(step["expected_duration"].split(":")[2])
+                ),
+            )
+            total_steps_created += 1
+
+    print(f"✅ Seeded {total_steps_created} Recording Steps successfully.")

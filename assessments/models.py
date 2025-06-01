@@ -1,6 +1,30 @@
 from django.db import models
+from accounts.models import User
 
 
+class Parent(models.Model):
+    id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    contant_info = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"File {self.id} for Patient {self.patient_id}"
+    
+class Patient(models.Model):
+    id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent_id = models.ForeignKey(Parent, on_delete=models.CASCADE) # optional or use default 0 no parent
+    name = models.CharField(max_length=255)
+    date_of_birth = models.DateField()
+    gender = models.CharField(max_length=50)    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"File {self.id} for Patient {self.patient_id}"
+        
 class AssessmentScenario(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
@@ -13,30 +37,30 @@ class AssessmentScenario(models.Model):
     updated_at = models.DateTimeField(auto_now=True) 
 
     def __str__(self):
-        return f"Scenario {self.number} - {self.model_name} (Level: {self.level})"
+        return f"Scenario {self.id} - {self.model_name} (Level: {self.level})"
     
 class Assessment(models.Model):
     id = models.AutoField(primary_key=True)
-    as_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    as_id = models.ForeignKey(AssessmentScenario, on_delete=models.CASCADE)
     # patient_id = models.ForeignKey('PatientProfile', on_delete=models.CASCADE)
     assessment_date = models.DateField()
     result_summary = models.TextField()
     additional_notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return f"Assessment {self.id} for Patient {self.patient_id}"
-    
+        return f"Assessment {self.id}"
+
 class Question(models.Model):
     id = models.AutoField(primary_key=True)
-    as_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
+    as_id = models.ForeignKey(AssessmentScenario, on_delete=models.CASCADE)
     question_text = models.TextField()
     question_order = models.CharField(max_length=255, default='100')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Question {self.id} for Scenario {self.assessment_scenario.name}"
-
+        return f"Question {self.id} for Scenario {self.as_id.name}"
+    
 class ResponseData(models.Model):
     id = models.AutoField(primary_key=True)
     question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -79,7 +103,3 @@ class PatientFile(models.Model):
     
     def __str__(self):
         return f"File {self.id} for Patient {self.patient_id}"
-
-
-
-    
