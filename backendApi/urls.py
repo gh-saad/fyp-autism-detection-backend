@@ -20,7 +20,9 @@ from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('assessment/', include('assessments.urls')),
+    path('api/auth/', include('authentication.urls')),
+    path('accounts/', include('allauth.urls')), # For django-allauth views
 ]
 urlpatterns += [
-    path('assessment/', include('assessments.urls')),
 ]
