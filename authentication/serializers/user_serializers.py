@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model, authenticate
 from django.utils.encoding import force_str
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 # from dj_rest_auth.registration.views import SocialLoginView # Not directly used here, but good to know for dj-rest-auth integration
 from django.conf import settings
 import requests
@@ -22,10 +24,16 @@ class RegistrationSerializer(serializers.Serializer):
             raise serializers.ValidationError("Passwords do not match.")
         return data
 
-class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
+class LoginSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
 
+        # Add custom user fields to the response
+        data['id'] = self.user.id
+        data['name'] = self.user.username  # Or self.user.get_full_name() if needed
+        # You can also add: data['email'] = self.user.email
+
+        return data
 class OTPVerificationSerializer(serializers.Serializer):
     email = serializers.EmailField()
     otp_code = serializers.CharField(max_length=6)

@@ -5,7 +5,8 @@ from .views import (
     QuestionViewSet,
     RecordingStepViewSet,
     ResponseDataCreateView,
-    PatientFileUploadView
+    PatientFileUploadView,
+    AssessmentCreateView
 )
 
 router = DefaultRouter()
@@ -16,5 +17,6 @@ urlpatterns = [
     path('questions/<int:assessment_id>/', QuestionViewSet.as_view({'get': 'list'}), name='questions-by-assessment'),
     path('recording-steps/<int:assessment_id>/', RecordingStepViewSet.as_view({'get': 'list'}), name='steps-by-assessment'),
     path('answer/create', ResponseDataCreateView.as_view(), name='create-response'),
-    path('patient-file/upload/', PatientFileUploadView.as_view(), name='upload-file')
+    path('patient-file/upload/', PatientFileUploadView.as_view(), name='upload-file'),
+    path('create/', AssessmentCreateView.as_view(), name='create-assessment'),
 ] 

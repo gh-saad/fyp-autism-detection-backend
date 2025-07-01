@@ -42,7 +42,7 @@ class AssessmentScenario(models.Model):
 class Assessment(models.Model):
     id = models.AutoField(primary_key=True)
     as_id = models.ForeignKey(AssessmentScenario, on_delete=models.CASCADE)
-    # patient_id = models.ForeignKey('PatientProfile', on_delete=models.CASCADE)
+    patient_id = models.ForeignKey(User, on_delete=models.CASCADE)
     assessment_date = models.DateField()
     result_summary = models.TextField()
     additional_notes = models.TextField(blank=True, null=True)

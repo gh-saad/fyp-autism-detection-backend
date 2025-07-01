@@ -4,6 +4,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import AssessmentScenario, Question, RecordingStep, ResponseData, Assessment, PatientFile
+from accounts.models import User
 from .serializers import (
     AssessmentScenarioSerializer,
     QuestionSerializer,
@@ -22,6 +23,39 @@ import cv2
 class AssessmentScenarioViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AssessmentScenario.objects.all()
     serializer_class = AssessmentScenarioSerializer
+
+class AssessmentCreateView(views.APIView):
+    def post(self, request):
+        # Extract assessment creation input from request data
+        input_data = {
+            "assessment_date": request.data.get("assessment_date", ""),
+            "result_summary": request.data.get("result_summary", ""),
+            "additional_notes": request.data.get("additional_notes", ""),
+            "as_id": request.data.get("as_id"),
+            "patient_id": request.data.get("patient_id"),
+        }
+
+        
+        # Validate required fields
+        if not input_data["as_id"] or not input_data["patient_id"]:
+            return Response({'status': 'error', 'message': 'Missing as_id or patient_id.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create the Assessment instance
+        try:
+            scenario = get_object_or_404(AssessmentScenario, pk=input_data["as_id"])
+            user = get_object_or_404(User, pk=input_data["patient_id"])
+            assessment = Assessment.objects.create(
+                assessment_date=input_data["assessment_date"],
+                result_summary=input_data["result_summary"] or "",
+                additional_notes=input_data["additional_notes"] or "",
+                as_id=scenario,
+                patient_id=user,
+            )
+        except Exception as e:
+            return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'status': 'success', 'assessment_id': assessment.id}, status=status.HTTP_201_CREATED)
+
 
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):

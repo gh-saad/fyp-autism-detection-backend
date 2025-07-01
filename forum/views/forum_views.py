@@ -51,7 +51,7 @@ class PostListCreateView(generics.ListCreateAPIView):
     """
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def perform_create(self, serializer):
         # Set the author of the post to the current authenticated user

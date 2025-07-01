@@ -12,3 +12,6 @@ Run Seeder:
 	python manage.py shell
 	from assessments import seeder
 seeder.run()
+
+
+pip freeze > requirements.txt

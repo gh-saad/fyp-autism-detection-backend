@@ -145,6 +145,10 @@ class LoginView(TokenObtainPairView):
 
         # Let SimpleJWT handle the actual authentication and token generation
         response = super().post(request, *args, **kwargs)
+        if response.status_code == status.HTTP_200_OK:
+            response.data['id'] = user.id
+            response.data['name'] = user.username  # or user.get_full_name() if you want full name
+
         return response
 
 
