@@ -9,7 +9,7 @@ def run():
         {
             "name": "Social Interaction Test",
             "description": "Observe if the child makes regular eye contact when spoken to.",
-            "img_path": "images/scenarios/social_interaction.jpg",
+            "img_path": "images/scenarios/social_interactions.png",
             "level": "Easy",
             "model_name": "social_interaction_model",
             "priority": "1",
@@ -17,7 +17,7 @@ def run():
         {
             "name": "Response to Name",
             "description": "Call the child's name and see if they respond without visual cues.",
-            "img_path": "images/scenarios/response_to_name.jpg",
+            "img_path": "images/scenarios/speaking.png",
             "level": "Easy",
             "model_name": "response_name_model",
             "priority": "2",
@@ -25,7 +25,7 @@ def run():
         {
             "name": "Joint Attention Task",
             "description": "Point at a distant object and observe if the child follows your point.",
-            "img_path": "images/scenarios/joint_attention.jpg",
+            "img_path": "images/scenarios/attention-to-detail.png",
             "level": "Medium",
             "model_name": "joint_attention_model",
             "priority": "3",
@@ -33,7 +33,7 @@ def run():
         {
             "name": "Imitative Behavior",
             "description": "Perform simple gestures like clapping and check if the child imitates.",
-            "img_path": "images/scenarios/imitative_behavior.jpg",
+            "img_path": "images/scenarios/consumer-behavior.png",
             "level": "Medium",
             "model_name": "imitative_behavior_model",
             "priority": "4",
@@ -41,7 +41,7 @@ def run():
         {
             "name": "Pretend Play Observation",
             "description": "Offer toys and check if the child engages in pretend play.",
-            "img_path": "images/scenarios/pretend_play.jpg",
+            "img_path": "images/scenarios/playtime.png",
             "level": "Medium",
             "model_name": "pretend_play_model",
             "priority": "5",
@@ -49,43 +49,11 @@ def run():
         {
             "name": "Unusual Sensory Reaction",
             "description": "Introduce unusual sounds/textures and observe the child's reaction.",
-            "img_path": "images/scenarios/sensory_reaction.jpg",
+            "img_path": "images/scenarios/feedback.png",
             "level": "Hard",
             "model_name": "sensory_reaction_model",
             "priority": "6",
-        },
-        {
-            "name": "Repetitive Behavior Monitoring",
-            "description": "Watch for repetitive movements like hand flapping or rocking.",
-            "img_path": "images/scenarios/repetitive_behavior.jpg",
-            "level": "Hard",
-            "model_name": "repetitive_behavior_model",
-            "priority": "7",
-        },
-        {
-            "name": "Language and Communication",
-            "description": "Initiate conversation and assess back-and-forth communication ability.",
-            "img_path": "images/scenarios/language_communication.jpg",
-            "level": "Medium",
-            "model_name": "language_communication_model",
-            "priority": "8",
-        },
-        {
-            "name": "Emotional Response to Situations",
-            "description": "Pretend scenarios like hurting yourself and observe emotional responses.",
-            "img_path": "images/scenarios/emotional_response.jpg",
-            "level": "Hard",
-            "model_name": "emotional_response_model",
-            "priority": "9",
-        },
-        {
-            "name": "Routine Change Tolerance",
-            "description": "Change a small routine and observe if the child shows distress.",
-            "img_path": "images/scenarios/routine_change.jpg",
-            "level": "Hard",
-            "model_name": "routine_change_model",
-            "priority": "10",
-        },
+        }
     ]
 
     # Optional: Clear previous entries (WARNING: will delete all existing!)
@@ -109,121 +77,71 @@ def run():
     scenarios = AssessmentScenario.objects.all()
 
     questions = [
-        {
-            "question_text": "Does the child make regular eye contact?",
-            "question_order": "1"
-        },
-        {
-            "question_text": "Does the child respond when called by name?",
-            "question_order": "2"
-        },
-        {
-            "question_text": "Does the child follow your gestures, like pointing?",
-            "question_order": "3"
-        },
-        {
-            "question_text": "Does the child imitate simple actions like clapping?",
-            "question_order": "4"
-        },
-        {
-            "question_text": "Does the child engage in pretend play with toys?",
-            "question_order": "5"
-        },
-        {
-            "question_text": "Does the child show unusual responses to sensory stimuli?",
-            "question_order": "6"
-        },
-        {
-            "question_text": "Does the child show repetitive behaviors, like hand flapping?",
-            "question_order": "7"
-        },
-        {
-            "question_text": "Can the child hold a basic conversation or exchange words?",
-            "question_order": "8"
-        },
-        {
-            "question_text": "Does the child respond with empathy when someone is hurt?",
-            "question_order": "9"
-        },
-        {
-            "question_text": "Does the child show distress when there is a change in routine?",
-            "question_order": "10"
-        },
-    ]
+    {
+        "question_text": "Does the child make regular eye contact?",
+        "question_order": "1"
+    },
+    {
+        "question_text": "Does the child show interest in others during interaction?",
+        "question_order": "2"
+    },
+    {
+        "question_text": "Does the child respond when called by name?",
+        "question_order": "1"
+    },
+    {
+        "question_text": "Does the child respond to different tones of voice?",
+        "question_order": "2"
+    },
+    {
+        "question_text": "Does the child follow your gestures, like pointing?",
+        "question_order": "1"
+    },
+    {
+        "question_text": "Does the child look where you look or point?",
+        "question_order": "1"
+    },
+    {
+        "question_text": "Does the child imitate simple actions like clapping?",
+        "question_order": "1"
+    },
+    {
+        "question_text": "Does the child repeat actions after watching you?",
+        "question_order": "2"
+    },
+    {
+        "question_text": "Does the child engage in pretend play with toys?",
+        "question_order": "1"
+    },
+    {
+        "question_text": "Does the child use toys in creative or symbolic ways?",
+        "question_order": "2"
+    },
+    {
+        "question_text": "Does the child show unusual responses to sensory stimuli?",
+        "question_order": "1"
+    },
+    {
+        "question_text": "Is the child overly sensitive or under-reactive to sounds or textures?",
+        "question_order": "2"
+    },
+]
+
 
     # Optional: Clear existing questions (CAUTION: deletes all!)
     Question.objects.all().delete()
 
     # Link each question to a random AssessmentScenario (for demonstration)
-    for q in questions:
-        scenario = random.choice(scenarios)  # Link to a random AssessmentScenario
-        
-        Question.objects.create(
-            question_text=q["question_text"],
-            question_order=q["question_order"],
-            as_id=scenario
-        )
-
-    print(f"✅ Seeded {len(questions)} questions successfully.")
-
-    # Retrieve all AssessmentScenario objects for linking
-    scenarios = AssessmentScenario.objects.all()
-
-    questions = [
-        {
-            "question_text": "Does the child make regular eye contact?",
-            "question_order": "1"
-        },
-        {
-            "question_text": "Does the child respond when called by name?",
-            "question_order": "2"
-        },
-        {
-            "question_text": "Does the child follow your gestures, like pointing?",
-            "question_order": "3"
-        },
-        {
-            "question_text": "Does the child imitate simple actions like clapping?",
-            "question_order": "4"
-        },
-        {
-            "question_text": "Does the child engage in pretend play with toys?",
-            "question_order": "5"
-        },
-        {
-            "question_text": "Does the child show unusual responses to sensory stimuli?",
-            "question_order": "6"
-        },
-        {
-            "question_text": "Does the child show repetitive behaviors, like hand flapping?",
-            "question_order": "7"
-        },
-        {
-            "question_text": "Can the child hold a basic conversation or exchange words?",
-            "question_order": "8"
-        },
-        {
-            "question_text": "Does the child respond with empathy when someone is hurt?",
-            "question_order": "9"
-        },
-        {
-            "question_text": "Does the child show distress when there is a change in routine?",
-            "question_order": "10"
-        },
-    ]
-
-    # Optional: Clear existing questions (CAUTION: deletes all!)
-    Question.objects.all().delete()
-
-    # Link each question to a random AssessmentScenario (for demonstration)
-    for q in questions:
-        scenario = random.choice(scenarios)  # Link to a random AssessmentScenario
-        
-        Question.objects.create(
-            question_text=q["question_text"],
-            question_order=q["question_order"],
-            as_id=scenario
-        )
+    question_index = 0
+    for scenario in scenarios:
+        for _ in range(2):  # Assign 2 questions to each scenario
+            q = questions[question_index]
+            Question.objects.create(
+                question_text=q["question_text"],
+                question_order=q["question_order"],
+                as_id=scenario  # Make sure this links correctly to your AssessmentScenario instance
+            )
+            question_index += 1
 
     print(f"✅ Seeded {len(questions)} questions successfully.")
 
