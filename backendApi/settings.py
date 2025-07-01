@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     'django_seed',
     'assessments',
-    'appointment'
+    'appointment',
+    'forum',
 ]
 
 MIDDLEWARE = [
