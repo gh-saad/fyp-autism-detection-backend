@@ -4,7 +4,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import AssessmentScenario, Question, RecordingStep, ResponseData, Assessment, PatientFile
-from .serializers import (
+from .serializer import (
     AssessmentScenarioSerializer,
     QuestionSerializer,
     RecordingStepSerializer,
@@ -42,23 +42,34 @@ class RecordingStepViewSet(viewsets.ReadOnlyModelViewSet):
 
 class ResponseDataCreateView(views.APIView):
     def post(self, request):
-        question_id = request.data.get('question_id')
-        assessment_id = request.data.get('assessment_id')
-        response_text = request.data.get('response_text', '')
+        answers = request.data.get('answers', [])
+        if not isinstance(answers, list) or not answers:
+            return Response({'status': 'error', 'message': 'Missing or invalid answers list.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not question_id or not assessment_id:
-            return Response({'status': 'error', 'message': 'Missing question_id or assessment_id.'}, status=status.HTTP_400_BAD_REQUEST)
+        created_ids = []
+        for answer in answers:
+            question_id = answer.get('question_id')
+            assessment_id = answer.get('assessment_id')
+            response_text = answer.get('response_text', '')
+            print(assessment_id,question_id)
+            if not question_id or not assessment_id:
+                continue  # Skip invalid entries
 
-        question = get_object_or_404(Question, pk=question_id)
-        assessment = get_object_or_404(Assessment, pk=assessment_id)
+            question = get_object_or_404(Question, pk=question_id)
+            assessment = get_object_or_404(Assessment, pk=assessment_id)
 
-        response = ResponseData.objects.create(
-            question_id=question,
-            assessment_id=assessment,
-            response_text=response_text,
-        )
+            print(question,assessment)
+            response = ResponseData.objects.create(
+                question_id=question,
+                assessment_id=assessment,
+                response_text=response_text,
+            )
+            created_ids.append(response.id)
 
-        return Response({'status': 'success', 'id': response.id}, status=status.HTTP_201_CREATED)
+        if not created_ids:
+            return Response({'status': 'error', 'message': 'No valid answers provided.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'status': 'success', 'ids': created_ids}, status=status.HTTP_201_CREATED)
 
 
 class PatientFileUploadView(views.APIView):
