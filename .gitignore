@@ -79,3 +79,5 @@ coverage.xml
 
 # Pyre type checker
 .pyre/
+
+/patient_media/
