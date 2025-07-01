@@ -23,9 +23,10 @@ from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
-urlpatterns += [
     path('assessment/', include('assessments.urls')),
+    path('api/auth/', include('authentication.urls')),
+    path('accounts/', include('allauth.urls')), 
+    path('api/forum/', include('forum.urls')), 
 ]
 
 if settings.DEBUG:
