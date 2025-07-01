@@ -23,8 +23,6 @@ urlpatterns = [
     path('assessment/', include('assessments.urls')),
     path('api/auth/', include('authentication.urls')),
     path('accounts/', include('allauth.urls')), 
-    # path('api/forum/', include('forum.urls')), 
+    path('api/forum/', include('forum.urls')), 
 
-]
-urlpatterns += [
 ]
