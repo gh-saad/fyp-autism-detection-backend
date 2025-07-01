@@ -1,0 +1,14 @@
+Create app:
+	py manage.py startapp appname
+    	
+Run Server:
+	py manage.py runserver
+	py manage.py migrate
+	py manage.py createsuperuser
+	python manage.py makemigrations
+	python manage.py migrate
+
+Run Seeder:
+	python manage.py shell
+	from assessments import seeder
+seeder.run()
