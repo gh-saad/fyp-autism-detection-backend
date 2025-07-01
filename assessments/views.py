@@ -4,7 +4,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import AssessmentScenario, Question, RecordingStep, ResponseData, Assessment, PatientFile
-from .serializer import (
+from .serializers import (
     AssessmentScenarioSerializer,
     QuestionSerializer,
     RecordingStepSerializer,
