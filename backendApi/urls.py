@@ -26,7 +26,8 @@ urlpatterns = [
     path('assessment/', include('assessments.urls')),
     path('api/auth/', include('authentication.urls')),
     path('accounts/', include('allauth.urls')), 
-    path('api/forums/', include('forum.urls')), 
+    path('api/forums/', include('forum.urls')),
+    path('appointment/', include('appointment.urls')), 
 ]
 
 if settings.DEBUG:

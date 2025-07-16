@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-0tnwz)7*!&rd#nr+sc1n4$cjr%xtij4u=+c9iy72fzk8u+3(ya
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -245,3 +245,5 @@ CORS_ALLOW_ALL_ORIGINS = True
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+GEMINI_API_KEY = "AIzaSyAoc8zYIPKAJxny9VobTQqiSyJK4aX6xe0"

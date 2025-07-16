@@ -20,6 +20,7 @@ class RecordingStepSerializer(serializers.ModelSerializer):
 
 
 class ResponseDataSerializer(serializers.ModelSerializer):
+    question_id = Question()
     class Meta:
         model = ResponseData
         fields = '__all__'

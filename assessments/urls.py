@@ -6,7 +6,9 @@ from .views import (
     RecordingStepViewSet,
     ResponseDataCreateView,
     PatientFileUploadView,
-    AssessmentCreateView
+    AssessmentCreateView,
+    ResponseDataViewSet,
+    ReportCreateView
 )
 
 router = DefaultRouter()
@@ -19,4 +21,8 @@ urlpatterns = [
     path('answer/create', ResponseDataCreateView.as_view(), name='create-response'),
     path('patient-file/upload/', PatientFileUploadView.as_view(), name='upload-file'),
     path('create/', AssessmentCreateView.as_view(), name='create-assessment'),
+
+    path('assessment/', ResponseDataViewSet.as_view({'get': 'list'}), name='assessment'),
+
+    path('analyze-autism/', ReportCreateView.as_view(), name='analyze-autism'),
 ] 

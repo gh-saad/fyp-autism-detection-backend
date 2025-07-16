@@ -19,6 +19,11 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import cv2
 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .services import analyze_autism_traits_with_gemini
+
 
 class AssessmentScenarioViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = AssessmentScenario.objects.all()
@@ -104,6 +109,22 @@ class ResponseDataCreateView(views.APIView):
             return Response({'status': 'error', 'message': 'No valid answers provided.'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({'status': 'success', 'ids': created_ids}, status=status.HTTP_201_CREATED)
+    
+class ResponseDataViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = ResponseDataSerializer
+
+    def get_queryset(self):
+        assessment_id = self.kwargs.get('assessment_id')
+        question_id = self.request.query_params.get('question_id')
+        queryset = ResponseData.objects.all()
+        if assessment_id:
+            queryset = queryset.filter(assessment_id=assessment_id)
+        if question_id:
+            queryset = queryset.filter(question_id=question_id)
+        return queryset
+    
+
+
 
 
 class PatientFileUploadView(views.APIView):
@@ -150,3 +171,108 @@ class PatientFileUploadView(views.APIView):
         )
 
         return Response({'status': 'success', 'file_path': full_path, 'duration': str(duration)}, status=status.HTTP_201_CREATED)
+
+class ReportCreateView(views.APIView):
+    # If you need to disable CSRF, it's usually handled by DRF's authentication/permission classes
+    # or globally in settings.py for API use cases.
+    # For a public API endpoint, you might explicitly disable it via:
+    # authentication_classes = []
+    # permission_classes = []
+    # But generally, don't use @csrf_exempt on a DRF APIView method.
+
+    def post(self, request, *args, **kwargs): # Use 'post' method for POST requests
+        try:
+            # When using DRF's APIView, request.data already handles JSON parsing
+            # So, you don't need json.loads(request.body)
+            # data = request.data
+            
+            # Since you're hardcoding, we'll keep that for now for testing
+            # In production, uncomment request.data and remove the hardcoded part.
+            # user_answers = data.get('user_answers') # When getting from request.data
+
+            user_answers = {
+                # Factual/Concrete Questions
+                "What is the color of a fire truck?": "Red",
+                "How many legs does a spider have?": "Eight",
+                "What is the shape of a soccer ball?": "Sphere",
+                "What sound does a cat make?": "Meow",
+                "What do you use to write on paper?": "Pencil",
+                "What is frozen water called?": "Ice",
+                "What planet do humans live on?": "Earth",
+                "How many hours are in one day?": "24",
+                "What is the opposite of 'day'?": "Night",
+                "What comes after the number 5?": "6",
+
+                # Safety/Routine Questions
+                "What should you do before crossing the street?": "Look both ways",
+                "Where do you go when there's a fire?": "Exit",
+                "What do you wear when it's raining?": "Raincoat",
+                "How often should you brush your teeth?": "Twice daily",
+                "What do you do when lights turn red?": "Stop",
+
+                # Sensory/Objects Questions
+                "What texture is sandpaper?": "Rough",
+                "What is the taste of lemon?": "Sour",
+                "What instrument has black and white keys?": "Piano",
+                "What animal has black and white stripes?": "Zebra",
+                "Where do you find refrigerator?": "Kitchen",
+
+                # Nature/Science Questions
+                "What plant grows from acorn?": "Oak tree",
+                "What is the largest ocean?": "Pacific",
+                "What gas do humans breathe?": "Oxygen",
+                "What season comes after winter?": "Spring",
+                "What melts in sunshine?": "Snow",
+
+                # Time/Dates Questions
+                "How many days in one week?": "7",
+                "What month comes after April?": "May",
+                "What holiday is on December 25?": "Christmas",
+                "What meal comes after lunch?": "Dinner",
+                "When does sunrise happen?": "Morning",
+
+                # Food Questions
+                "What fruit is yellow and curved?": "Banana",
+                "What do you pour on cereal?": "Milk",
+                "Where does honey come from?": "Bees",
+                "What vegetable makes you cry?": "Onion",
+                "What is frozen dessert?": "Ice cream",
+
+                # Body/Health Questions
+                "How many fingers on one hand?": "5",
+                "Where is your elbow?": "Arm",
+                "What helps you see?": "Eyes",
+                "What exercise makes heart beat faster?": "Running",
+                "What do bandages protect?": "Cuts",
+
+                # Transportation Questions
+                "What vehicle flies in sky?": "Airplane",
+                "What has two wheels?": "Bicycle",
+                "Where do trains run?": "Tracks",
+                "What color is school bus?": "Yellow",
+                "What moves boats?": "Motor",
+
+                # Home Questions
+                "Where do you sleep?": "Bed",
+                "What keeps room bright?": "Light",
+                "What appliance cooks food?": "Stove",
+                "Where do clothes go?": "Closet",
+                "What cleans dishes?": "Dishwasher",
+
+                # Animals Questions
+                "What bird says 'hoot'?": "Owl",
+                "What sea animal has tentacles?": "Octopus",
+                "What farm animal gives milk?": "Cow",
+                "What insect makes web?": "Spider",
+                "What is fastest land animal?": "Cheetah"
+            }
+            
+            if user_answers:
+                analysis_result = analyze_autism_traits_with_gemini(user_answers)
+                # Use DRF's Response object for API responses
+                return Response({'analysis': analysis_result}, status=status.HTTP_200_OK)
+            return Response({'error': 'No user answers provided'}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e: # Catch a broader exception for debugging
+            # For debugging, print the error
+            print(f"Error in ReportCreateView: {e}")
+            return Response({'error': f'An error occurred: {str(e)}'}, status=status.HTTP_400_BAD_REQUEST)
