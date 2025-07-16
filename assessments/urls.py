@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
+    AssessmentDataViewSet,
     AssessmentScenarioViewSet,
     QuestionViewSet,
     RecordingStepViewSet,
@@ -22,7 +23,8 @@ urlpatterns = [
     path('patient-file/upload/', PatientFileUploadView.as_view(), name='upload-file'),
     path('create/', AssessmentCreateView.as_view(), name='create-assessment'),
 
-    path('assessment/', ResponseDataViewSet.as_view({'get': 'list'}), name='assessment'),
+    # path('assessment/', ResponseDataViewSet.as_view({'get': 'list'}), name='assessment'),
+    path('assessment/', AssessmentDataViewSet.as_view({'get': 'list'}), name='assessment'),
 
     path('analyze-autism/', ReportCreateView.as_view(), name='analyze-autism'),
 ] 

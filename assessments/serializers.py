@@ -1,11 +1,17 @@
 from rest_framework import serializers
-from .models import AssessmentScenario, Question, RecordingStep, ResponseData, PatientFile
+from .models import Assessment, AssessmentScenario, Question, RecordingStep, ResponseData, PatientFile
+
 
 class AssessmentScenarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = AssessmentScenario
         fields = '__all__'
 
+class AssessmentSerializer(serializers.ModelSerializer):
+    as_id = AssessmentScenarioSerializer(read_only=True)
+    class Meta:
+        model = Assessment
+        fields = '__all__'
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:

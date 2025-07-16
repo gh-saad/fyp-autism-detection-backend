@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from .models import AssessmentScenario, Question, RecordingStep, ResponseData, Assessment, PatientFile
 from accounts.models import User
 from .serializers import (
+    AssessmentSerializer,
     AssessmentScenarioSerializer,
     QuestionSerializer,
     RecordingStepSerializer,
@@ -61,7 +62,16 @@ class AssessmentCreateView(views.APIView):
 
         return Response({'status': 'success', 'assessment_id': assessment.id}, status=status.HTTP_201_CREATED)
 
+class AssessmentDataViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = AssessmentSerializer
 
+    def get_queryset(self):
+        patient_id = self.kwargs.get('patient_id')
+        queryset = Assessment.objects.all()
+        if patient_id:
+            queryset = queryset.filter(patient_id=patient_id)
+        return queryset
+    
 
 class QuestionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = QuestionSerializer
@@ -182,6 +192,9 @@ class ReportCreateView(views.APIView):
 
     def post(self, request, *args, **kwargs): # Use 'post' method for POST requests
         try:
+            user_answers = request.data.get('user_answers', {})
+            assessment_id = request.data.get('assessment_id')
+
             # When using DRF's APIView, request.data already handles JSON parsing
             # So, you don't need json.loads(request.body)
             # data = request.data
@@ -269,6 +282,9 @@ class ReportCreateView(views.APIView):
             
             if user_answers:
                 analysis_result = analyze_autism_traits_with_gemini(user_answers)
+                updated = Assessment.objects.filter(id=assessment_id).update(result_summary=analysis_result)
+                if updated == 0:
+                    return Response({'error': f'Assessment with id {assessment_id} not found.'}, status=status.HTTP_404_NOT_FOUND)
                 # Use DRF's Response object for API responses
                 return Response({'analysis': analysis_result}, status=status.HTTP_200_OK)
             return Response({'error': 'No user answers provided'}, status=status.HTTP_400_BAD_REQUEST)
